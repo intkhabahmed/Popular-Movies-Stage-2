@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Cine Prime</string>
+    <string name="movie_thumbnail_desc">movie poster thumbnail</string>
+    <string name="filter">Filter</string>
+    <string name="popular_movies">Popular Movies</string>
+    <string name="top_rated_movies">Top Rated Movies</string>
+    <string name="sort_criteria">sort criteria</string>
+    <string name="sort_criteria_id">sort criteria id</string>
+    <string name="movie_object">movie object</string>
+    <string name="movie_backdrop_desc">Movie Backdrop poster</string>
+    <string name="released_on">Released On</string>
+    <string name="rating">Rating</string>
+    <string name="no_network_message">No Internet Connection!! Tap to retry.</string>
+    <string name="retry_loading_button">Retry button to load movies</string>
+    <string name="overview">Overview</string>
+</resources>

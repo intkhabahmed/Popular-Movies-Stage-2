@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/movie_filter"
+        android:title="@string/filter"
+        android:icon="@drawable/ic_sort_white_24dp"
+        app:showAsAction="ifRoom">
+        <menu>
+            <group
+                android:id="@+id/filter_group"
+                android:checkableBehavior="single">
+                <item
+                    android:id="@+id/popular_movies"
+                    android:title="@string/popular_movies"
+                    android:orderInCategory="1"/>
+                <item
+                    android:id="@+id/top_rated_movies"
+                    android:title="@string/top_rated_movies"
+                    android:orderInCategory="2"/>
+            </group>
+        </menu>
+    </item>
+</menu>
