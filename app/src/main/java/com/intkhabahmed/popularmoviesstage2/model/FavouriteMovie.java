@@ -7,13 +7,11 @@ import android.arch.persistence.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
 import java.util.Date;
 
-@Entity(tableName = "movies")
-public class Movie implements Serializable {
+@Entity(tableName = "favourites")
+public class FavouriteMovie {
     @PrimaryKey
-    private int id;
     @SerializedName("id")
     @ColumnInfo(name = "movie_id")
     private int movieId;
@@ -34,25 +32,20 @@ public class Movie implements Serializable {
     @SerializedName("backdrop_path")
     @ColumnInfo(name = "backdrop_path")
     private String backdropPath;
-    @ColumnInfo(name = "criteria")
-    private String criteria;
-
-    public Movie(int movieId, String originalTitle, Date releaseDate, String posterUrl, float voteAverage,
-                 String overview, String backdropPath, String criteria) {
-        this.movieId = movieId;
-        this.originalTitle = originalTitle;
-        this.releaseDate = releaseDate;
-        this.posterUrl = posterUrl;
-        this.voteAverage = voteAverage;
-        this.overview = overview;
-        this.backdropPath = backdropPath;
-        this.criteria = criteria;
-    }
 
     @Ignore
-    public Movie(int id, int movieId, String originalTitle, Date releaseDate, String posterUrl, float voteAverage,
-                 String overview, String backdropPath, String criteria) {
-        this.id = id;
+    public FavouriteMovie(String originalTitle, Date releaseDate, String posterUrl, float voteAverage,
+                          String overview, String backdropPath) {
+        this.originalTitle = originalTitle;
+        this.releaseDate = releaseDate;
+        this.posterUrl = posterUrl;
+        this.voteAverage = voteAverage;
+        this.overview = overview;
+        this.backdropPath = backdropPath;
+    }
+
+    public FavouriteMovie(int movieId, String originalTitle, Date releaseDate, String posterUrl, float voteAverage,
+                          String overview, String backdropPath) {
         this.movieId = movieId;
         this.originalTitle = originalTitle;
         this.releaseDate = releaseDate;
@@ -60,7 +53,6 @@ public class Movie implements Serializable {
         this.voteAverage = voteAverage;
         this.overview = overview;
         this.backdropPath = backdropPath;
-        this.criteria = criteria;
     }
 
     public String getOriginalTitle() {
@@ -113,17 +105,5 @@ public class Movie implements Serializable {
 
     public int getMovieId() {
         return movieId;
-    }
-
-    public void setMovieId(int movieId) {
-        this.movieId = movieId;
-    }
-
-    public String getCriteria() {
-        return criteria;
-    }
-
-    public void setCriteria(String criteria) {
-        this.criteria = criteria;
     }
 }

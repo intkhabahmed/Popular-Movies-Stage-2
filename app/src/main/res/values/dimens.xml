@@ -15,4 +15,5 @@
     <dimen name="thumbnail_margin">172dp</dimen>
     <dimen name="thumbnail_border_padding">2dp</dimen>
     <dimen name="land_thumbnail_margin">72dp</dimen>
+    <dimen name="no_spacing">0dp</dimen>
 </resources>

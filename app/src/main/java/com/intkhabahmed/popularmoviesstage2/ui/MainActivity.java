@@ -26,6 +26,8 @@ import com.intkhabahmed.popularmoviesstage2.databinding.ActivityMainBinding;
 import com.intkhabahmed.popularmoviesstage2.model.Movie;
 import com.intkhabahmed.popularmoviesstage2.model.MovieResult;
 import com.intkhabahmed.popularmoviesstage2.utils.AppConstants;
+import com.intkhabahmed.popularmoviesstage2.utils.AppExecutors;
+import com.intkhabahmed.popularmoviesstage2.utils.Global;
 import com.intkhabahmed.popularmoviesstage2.utils.NetworkUtils;
 import com.intkhabahmed.popularmoviesstage2.viewmodels.MoviesViewModel;
 import com.intkhabahmed.popularmoviesstage2.viewmodels.MoviesViewModelFactory;
@@ -46,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.OnI
     }
 
     private void performLoading(final boolean isCriteriaChanged) {
-        Executors.newSingleThreadExecutor().execute(new Runnable() {
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
                 final boolean isConnected = NetworkUtils.getConnectivityStatus(MainActivity.this);
@@ -105,8 +107,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.OnI
     private void setupViewModel(boolean isMovieCriteriaChanged) {
         mMainBinding.noConnectionLl.setVisibility(View.INVISIBLE);
         mMainBinding.loadingPb.setVisibility(View.VISIBLE);
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String sortCriteria = sharedPreferences.getString(getString(R.string.sort_criteria), AppConstants.POPULAR_MOVIES);
+        String sortCriteria = Global.getSortCriteriaString();
         MoviesViewModelFactory factory = new MoviesViewModelFactory(sortCriteria, getString(R.string.api_key));
         MoviesViewModel moviesViewModel = ViewModelProviders.of(this, factory).get(MoviesViewModel.class);
         if (isMovieCriteriaChanged) {
@@ -128,8 +129,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.OnI
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
-        int subMenuOrder = PreferenceManager.getDefaultSharedPreferences(this)
-                .getInt(getString(R.string.sort_criteria_id), 1);
+        int subMenuOrder = Global.getSortCriteriaOrder();
         menu.getItem(0).getSubMenu().getItem(subMenuOrder - 1).setChecked(true);
         return super.onCreateOptionsMenu(menu);
     }
@@ -152,10 +152,8 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.OnI
     }
 
     private void refreshMovies(String sortCriteria, int order) {
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        editor.putString(getString(R.string.sort_criteria), sortCriteria);
-        editor.putInt(getString(R.string.sort_criteria_id), order);
-        editor.apply();
+        Global.saveSortCriteriaString(sortCriteria);
+        Global.saveSortCriteriaOrder(order);
         performLoading(true);
     }
 

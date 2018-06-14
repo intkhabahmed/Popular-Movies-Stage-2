@@ -18,6 +18,13 @@ public class MovieResult {
     @SerializedName("results")
     private List<Movie> movies;
 
+    public MovieResult() {
+    }
+
+    public MovieResult(List<Movie> movies) {
+        this.movies = movies;
+    }
+
     public int getPageNo() {
         return pageNo;
     }

@@ -13,4 +13,5 @@
     <string name="no_network_message">No Internet Connection!! Tap to retry.</string>
     <string name="retry_loading_button">Retry button to load movies</string>
     <string name="overview">Overview</string>
+    <string name="favourite_button">Button to mark movie as favourite</string>
 </resources>

@@ -14,7 +14,7 @@
 
             <ImageView
                 android:id="@+id/backdrop_iv"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/no_spacing"
                 android:layout_height="@dimen/grid_image_height"
                 android:contentDescription="@string/movie_backdrop_desc"
                 android:scaleType="centerCrop"
@@ -25,7 +25,7 @@
 
             <TextView
                 android:id="@+id/original_title_tv"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/no_spacing"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/large_spacing"
                 android:layout_marginLeft="@dimen/large_spacing"
@@ -45,10 +45,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/large_spacing"
                 android:layout_marginStart="@dimen/large_spacing"
-                android:layout_marginTop="@dimen/xlarge_spacing"
+                android:layout_marginTop="@dimen/medium_spacing"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 app:layout_constraintStart_toEndOf="@+id/released_on_icon_iv"
-                app:layout_constraintTop_toBottomOf="@+id/backdrop_iv"
+                app:layout_constraintTop_toBottomOf="@+id/favourite_ib"
                 tools:text="@sample/tools:date/ddmmyy" />
 
             <ImageView
@@ -63,7 +63,7 @@
 
             <TextView
                 android:id="@+id/plot_synopsis_tv"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/no_spacing"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/large_spacing"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -120,6 +120,21 @@
                 app:layout_constraintEnd_toEndOf="@+id/original_title_tv"
                 app:layout_constraintStart_toStartOf="@+id/original_title_tv"
                 app:layout_constraintTop_toBottomOf="@+id/original_title_tv" />
+
+            <ImageButton
+                android:id="@+id/favourite_ib"
+                style="@android:style/Widget.ImageButton"
+                android:layout_width="@dimen/large_icon_size"
+                android:layout_height="@dimen/large_icon_size"
+                android:layout_marginEnd="@dimen/medium_spacing"
+                android:layout_marginRight="@dimen/medium_spacing"
+                android:background="@android:color/white"
+                android:contentDescription="@string/favourite_button"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="@+id/backdrop_iv"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/backdrop_iv"
+                app:srcCompat="@drawable/ic_favorite_border_24dp" />
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
 </layout>
