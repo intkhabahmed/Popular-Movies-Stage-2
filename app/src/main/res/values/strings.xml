@@ -14,4 +14,6 @@
     <string name="retry_loading_button">Retry button to load movies</string>
     <string name="overview">Overview</string>
     <string name="favourite_button">Button to mark movie as favourite</string>
+    <string name="added_to_favourite">Movie added to Favourites</string>
+    <string name="removed_from_favourite">Movie removed from Favourites</string>
 </resources>

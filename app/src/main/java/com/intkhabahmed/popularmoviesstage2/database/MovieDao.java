@@ -21,13 +21,19 @@ interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMovies(List<Movie> movies);
 
+    @Query("DELETE FROM movies WHERE criteria = :criteria")
+    void deleteAllByCriteria(String criteria);
+
     @Query("SELECT * FROM favourites")
     LiveData<List<FavouriteMovie>> getFavouriteMovies();
+
+    @Query("SELECT COUNT(movie_id) FROM favourites WHERE movie_id = :movieId")
+    LiveData<Integer> isFavourite(int movieId);
 
     @Insert
     void insertFavouriteMovie(FavouriteMovie favouriteMovie);
 
-    @Delete
-    void deleteFavouriteMovie(FavouriteMovie favouriteMovie);
+    @Query("DELETE FROM favourites WHERE movie_id = :movieId")
+    void deleteFavouriteMovie(int movieId);
 
 }

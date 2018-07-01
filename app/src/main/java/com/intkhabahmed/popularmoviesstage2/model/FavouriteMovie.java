@@ -4,14 +4,18 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
 
 import com.google.gson.annotations.SerializedName;
+import com.intkhabahmed.popularmoviesstage2.utils.DateUtils;
 
 import java.util.Date;
 
 @Entity(tableName = "favourites")
+@TypeConverters(DateUtils.class)
 public class FavouriteMovie {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    private int uId;
     @SerializedName("id")
     @ColumnInfo(name = "movie_id")
     private int movieId;
@@ -44,8 +48,9 @@ public class FavouriteMovie {
         this.backdropPath = backdropPath;
     }
 
-    public FavouriteMovie(int movieId, String originalTitle, Date releaseDate, String posterUrl, float voteAverage,
-                          String overview, String backdropPath) {
+    public FavouriteMovie(int uId, int movieId, String originalTitle, Date releaseDate, String posterUrl,
+                          float voteAverage, String overview, String backdropPath) {
+        this.uId = uId;
         this.movieId = movieId;
         this.originalTitle = originalTitle;
         this.releaseDate = releaseDate;
@@ -105,5 +110,17 @@ public class FavouriteMovie {
 
     public int getMovieId() {
         return movieId;
+    }
+
+    public void setMovieId(int movieId) {
+        this.movieId = movieId;
+    }
+
+    public int getUId() {
+        return uId;
+    }
+
+    public void setUId(int uId) {
+        this.uId = uId;
     }
 }

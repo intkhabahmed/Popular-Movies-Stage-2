@@ -4,16 +4,19 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
 
 import com.google.gson.annotations.SerializedName;
+import com.intkhabahmed.popularmoviesstage2.utils.DateUtils;
 
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity(tableName = "movies")
+@TypeConverters(DateUtils.class)
 public class Movie implements Serializable {
-    @PrimaryKey
-    private int id;
+    @PrimaryKey(autoGenerate = true)
+    private int rowId;
     @SerializedName("id")
     @ColumnInfo(name = "movie_id")
     private int movieId;
@@ -37,6 +40,7 @@ public class Movie implements Serializable {
     @ColumnInfo(name = "criteria")
     private String criteria;
 
+    @Ignore
     public Movie(int movieId, String originalTitle, Date releaseDate, String posterUrl, float voteAverage,
                  String overview, String backdropPath, String criteria) {
         this.movieId = movieId;
@@ -49,10 +53,9 @@ public class Movie implements Serializable {
         this.criteria = criteria;
     }
 
-    @Ignore
-    public Movie(int id, int movieId, String originalTitle, Date releaseDate, String posterUrl, float voteAverage,
+    public Movie(int rowId, int movieId, String originalTitle, Date releaseDate, String posterUrl, float voteAverage,
                  String overview, String backdropPath, String criteria) {
-        this.id = id;
+        this.rowId = rowId;
         this.movieId = movieId;
         this.originalTitle = originalTitle;
         this.releaseDate = releaseDate;
@@ -125,5 +128,13 @@ public class Movie implements Serializable {
 
     public void setCriteria(String criteria) {
         this.criteria = criteria;
+    }
+
+    public int getRowId() {
+        return rowId;
+    }
+
+    public void setRowId(int rowId) {
+        this.rowId = rowId;
     }
 }

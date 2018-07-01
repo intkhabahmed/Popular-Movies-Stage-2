@@ -16,12 +16,15 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.intkhabahmed.popularmoviesstage2.R;
 import com.intkhabahmed.popularmoviesstage2.adapter.MoviesAdapter;
+import com.intkhabahmed.popularmoviesstage2.database.MovieDao_Impl;
+import com.intkhabahmed.popularmoviesstage2.database.MovieRepository;
 import com.intkhabahmed.popularmoviesstage2.databinding.ActivityMainBinding;
 import com.intkhabahmed.popularmoviesstage2.model.Movie;
 import com.intkhabahmed.popularmoviesstage2.model.MovieResult;
@@ -32,6 +35,7 @@ import com.intkhabahmed.popularmoviesstage2.utils.NetworkUtils;
 import com.intkhabahmed.popularmoviesstage2.viewmodels.MoviesViewModel;
 import com.intkhabahmed.popularmoviesstage2.viewmodels.MoviesViewModelFactory;
 
+import java.util.List;
 import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.OnItemClick {
@@ -55,12 +59,12 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.OnI
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (!isConnected) {
+                        /*if (!isConnected) {
                             mMoviesAdapter.setMovies(null);
                             mMainBinding.noConnectionLl.setVisibility(View.VISIBLE);
                             mMainBinding.loadingPb.setVisibility(View.INVISIBLE);
                             return;
-                        }
+                        }*/
                         setupViewModel(isCriteriaChanged);
                     }
                 });
@@ -107,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.OnI
     private void setupViewModel(boolean isMovieCriteriaChanged) {
         mMainBinding.noConnectionLl.setVisibility(View.INVISIBLE);
         mMainBinding.loadingPb.setVisibility(View.VISIBLE);
-        String sortCriteria = Global.getSortCriteriaString();
+        final String sortCriteria = Global.getSortCriteriaString();
         MoviesViewModelFactory factory = new MoviesViewModelFactory(sortCriteria, getString(R.string.api_key));
         MoviesViewModel moviesViewModel = ViewModelProviders.of(this, factory).get(MoviesViewModel.class);
         if (isMovieCriteriaChanged) {
@@ -119,12 +123,16 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.OnI
                 mMainBinding.loadingPb.setVisibility(View.INVISIBLE);
                 if (movieResult != null) {
                     mMoviesAdapter.setMovies(movieResult.getMovies());
+                    MovieRepository.getInstance().saveInDatabase(movieResult.getMovies(), sortCriteria);
                 } else {
                     mMoviesAdapter.setMovies(null);
+                    mMainBinding.noConnectionLl.setVisibility(View.VISIBLE);
                 }
             }
         });
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
