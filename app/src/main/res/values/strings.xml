@@ -16,4 +16,5 @@
     <string name="favourite_button">Button to mark movie as favourite</string>
     <string name="added_to_favourite">Movie added to Favourites</string>
     <string name="removed_from_favourite">Movie removed from Favourites</string>
+    <string name="favourites">Favourites</string>
 </resources>

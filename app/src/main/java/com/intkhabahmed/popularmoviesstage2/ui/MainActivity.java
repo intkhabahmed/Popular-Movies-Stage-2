@@ -4,39 +4,28 @@ import android.app.ActivityOptions;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.intkhabahmed.popularmoviesstage2.R;
 import com.intkhabahmed.popularmoviesstage2.adapter.MoviesAdapter;
-import com.intkhabahmed.popularmoviesstage2.database.MovieDao_Impl;
-import com.intkhabahmed.popularmoviesstage2.database.MovieRepository;
 import com.intkhabahmed.popularmoviesstage2.databinding.ActivityMainBinding;
 import com.intkhabahmed.popularmoviesstage2.model.Movie;
 import com.intkhabahmed.popularmoviesstage2.model.MovieResult;
 import com.intkhabahmed.popularmoviesstage2.utils.AppConstants;
-import com.intkhabahmed.popularmoviesstage2.utils.AppExecutors;
 import com.intkhabahmed.popularmoviesstage2.utils.Global;
-import com.intkhabahmed.popularmoviesstage2.utils.NetworkUtils;
 import com.intkhabahmed.popularmoviesstage2.viewmodels.MoviesViewModel;
 import com.intkhabahmed.popularmoviesstage2.viewmodels.MoviesViewModelFactory;
-
-import java.util.List;
-import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.OnItemClick {
 
@@ -48,28 +37,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.OnI
         super.onCreate(savedInstanceState);
         mMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         setupUI();
-        performLoading(false);
-    }
-
-    private void performLoading(final boolean isCriteriaChanged) {
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                final boolean isConnected = NetworkUtils.getConnectivityStatus(MainActivity.this);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        /*if (!isConnected) {
-                            mMoviesAdapter.setMovies(null);
-                            mMainBinding.noConnectionLl.setVisibility(View.VISIBLE);
-                            mMainBinding.loadingPb.setVisibility(View.INVISIBLE);
-                            return;
-                        }*/
-                        setupViewModel(isCriteriaChanged);
-                    }
-                });
-            }
-        });
+        setupViewModel(false);
     }
 
     private void setupUI() {
@@ -103,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.OnI
         mMainBinding.retryIb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                performLoading(true);
+                setupViewModel(true);
             }
         });
     }
@@ -123,7 +91,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.OnI
                 mMainBinding.loadingPb.setVisibility(View.INVISIBLE);
                 if (movieResult != null) {
                     mMoviesAdapter.setMovies(movieResult.getMovies());
-                    MovieRepository.getInstance().saveInDatabase(movieResult.getMovies(), sortCriteria);
                 } else {
                     mMoviesAdapter.setMovies(null);
                     mMainBinding.noConnectionLl.setVisibility(View.VISIBLE);
@@ -132,7 +99,13 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.OnI
         });
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(Global.getSortCriteriaString().equals(AppConstants.FAVOURITE_MOVIES)) {
+            setupViewModel(true);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -148,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.OnI
         switch (id) {
             case R.id.popular_movies:
             case R.id.top_rated_movies:
+            case R.id.favourite_movies:
                 if (item.isChecked()) {
                     item.setChecked(false);
                 } else {
@@ -162,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.OnI
     private void refreshMovies(String sortCriteria, int order) {
         Global.saveSortCriteriaString(sortCriteria);
         Global.saveSortCriteriaOrder(order);
-        performLoading(true);
+        setupViewModel(true);
     }
 
     private String getSortCriteria(int order) {
@@ -171,6 +145,8 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.OnI
                 return AppConstants.POPULAR_MOVIES;
             case 2:
                 return AppConstants.TOP_RATED_MOVIES;
+            case 3:
+                return AppConstants.FAVOURITE_MOVIES;
             default:
                 return null;
         }

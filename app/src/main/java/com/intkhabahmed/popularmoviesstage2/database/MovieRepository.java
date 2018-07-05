@@ -7,8 +7,9 @@ import android.arch.lifecycle.Observer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.util.SparseIntArray;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.intkhabahmed.popularmoviesstage2.model.FavouriteMovie;
 import com.intkhabahmed.popularmoviesstage2.model.Movie;
 import com.intkhabahmed.popularmoviesstage2.model.MovieResult;
@@ -19,7 +20,6 @@ import com.intkhabahmed.popularmoviesstage2.utils.AppExecutors;
 import com.intkhabahmed.popularmoviesstage2.utils.Global;
 import com.intkhabahmed.popularmoviesstage2.utils.NetworkUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -40,24 +40,27 @@ public class MovieRepository {
     public LiveData<MovieResult> getMovies(final String criteria, String apiKey) {
         final MutableLiveData<MovieResult> result = new MutableLiveData<>();
 
+        if (criteria.equals(AppConstants.FAVOURITE_MOVIES)) {
+            return getAllFavouriteMovies();
+        }
         if (!NetworkUtils.getConnectivityStatus(Global.getInstance())) {
             return getAllMoviesFromDB(criteria);
-        } else {
-            ApiClient.getInstance().create(WebService.class)
-                    .getMoviesByPreference(criteria, apiKey)
-                    .enqueue(new Callback<MovieResult>() {
-                        @Override
-                        public void onResponse(@NonNull Call<MovieResult> call, @NonNull Response<MovieResult> response) {
-                            result.setValue(response.body());
-                        }
-
-                        @Override
-                        public void onFailure(@NonNull Call<MovieResult> call, @NonNull Throwable t) {
-                            call.cancel();
-                            Log.v(MovieRepository.class.getName(), "error: " + t.getMessage());
-                        }
-                    });
         }
+        ApiClient.getInstance().create(WebService.class)
+                .getMoviesByPreference(criteria, apiKey)
+                .enqueue(new Callback<MovieResult>() {
+                    @Override
+                    public void onResponse(@NonNull Call<MovieResult> call, @NonNull Response<MovieResult> response) {
+                        result.setValue(response.body());
+                        saveInDatabase(response.body().getMovies(), criteria);
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<MovieResult> call, @NonNull Throwable t) {
+                        call.cancel();
+                        Log.v(MovieRepository.class.getName(), "error: " + t.getMessage());
+                    }
+                });
         return result;
     }
 
@@ -79,7 +82,7 @@ public class MovieRepository {
         return mediatorLiveData;
     }
 
-    public void saveInDatabase(final List<Movie> movies, final String sortCriteria) {
+    private void saveInDatabase(final List<Movie> movies, final String sortCriteria) {
         for(Movie movie : movies) {
             movie.setCriteria(sortCriteria);
         }
@@ -97,7 +100,6 @@ public class MovieRepository {
     }
 
     public void refreshFavouriteMovies(final FavouriteMovie favouriteMovie, boolean isFavourite) {
-        Log.v("Favourite", isFavourite+"");
         if (isFavourite) {
             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                 @Override
@@ -113,5 +115,26 @@ public class MovieRepository {
                 Global.getDbInstance().movieDao().insertFavouriteMovie(favouriteMovie);
             }
         });
+    }
+
+    private LiveData<MovieResult> getAllFavouriteMovies() {
+        final MediatorLiveData<MovieResult> mediatorLiveData = new MediatorLiveData<>();
+        final LiveData<List<FavouriteMovie>> moviesLiveData = Global.getDbInstance().movieDao().getFavouriteMovies();
+
+        mediatorLiveData.addSource(moviesLiveData, new Observer<List<FavouriteMovie>>() {
+            @Override
+            public void onChanged(@Nullable List<FavouriteMovie> favouriteMovies) {
+                mediatorLiveData.removeSource(moviesLiveData);
+                if(favouriteMovies != null && !favouriteMovies.isEmpty()) {
+                    Gson gson = new Gson();
+                    String json = gson.toJson(favouriteMovies);
+                    List<Movie> movies = gson.fromJson(json, new TypeToken<List<Movie>>(){}.getType());
+                    mediatorLiveData.setValue(new MovieResult(movies));
+                } else {
+                    mediatorLiveData.setValue(null);
+                }
+            }
+        });
+        return mediatorLiveData;
     }
 }

@@ -6,4 +6,5 @@ public class AppConstants {
     public static final String BASE_URL = "http://api.themoviedb.org/3/";
     public static final String POPULAR_MOVIES = "popular";
     public static final String TOP_RATED_MOVIES = "top_rated";
+    public static final String FAVOURITE_MOVIES = "favourites";
 }
