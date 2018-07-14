@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="@dimen/medium_spacing">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/cast_profile_civ"
+        android:layout_width="@dimen/large_icon_size"
+        android:layout_height="@dimen/large_icon_size"
+        app:civ_border_color="@android:color/white"
+        app:civ_border_width="@dimen/thumbnail_border_padding"/>
+    <TextView
+        android:id="@+id/original_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/medium_spacing"
+        />
+    <TextView
+        android:id="@+id/character_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/medium_spacing"
+        />
+</LinearLayout>

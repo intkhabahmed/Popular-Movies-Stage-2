@@ -85,11 +85,10 @@
                 android:layout_width="@dimen/no_spacing"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/medium_spacing"
-                android:layout_marginEnd="@dimen/medium_spacing"
-                android:layout_marginRight="@dimen/medium_spacing"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
                 android:layout_marginTop="@dimen/large_spacing"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/movie_thumbnail_iv"
                 app:layout_constraintTop_toBottomOf="@+id/movie_thumbnail_iv"
@@ -145,6 +144,104 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/backdrop_iv"
                 app:srcCompat="@drawable/ic_favorite_border_24dp" />
+
+            <TextView
+                android:id="@+id/cast_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/large_spacing"
+                android:text="@string/casts"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                app:layout_constraintEnd_toEndOf="@+id/plot_synopsis_tv"
+                app:layout_constraintStart_toStartOf="@+id/plot_synopsis_tv"
+                app:layout_constraintTop_toBottomOf="@+id/plot_synopsis_tv" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/cast_list_rv"
+                android:layout_width="@dimen/no_spacing"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/large_spacing"
+                android:background="@color/lightGrey"
+                app:layout_constraintEnd_toEndOf="@+id/plot_synopsis_tv"
+                app:layout_constraintStart_toStartOf="@+id/plot_synopsis_tv"
+                app:layout_constraintTop_toBottomOf="@+id/cast_tv" />
+
+            <TextView
+                android:id="@+id/trailers_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/large_spacing"
+                android:text="@string/trailers"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                app:layout_constraintEnd_toEndOf="@+id/cast_list_rv"
+                app:layout_constraintStart_toStartOf="@+id/cast_list_rv"
+                app:layout_constraintTop_toBottomOf="@+id/cast_list_rv" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/trailers_rv"
+                android:layout_width="@dimen/no_spacing"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/large_spacing"
+                android:background="@color/lightGrey"
+                app:layout_constraintEnd_toEndOf="@+id/cast_list_rv"
+                app:layout_constraintStart_toStartOf="@+id/cast_list_rv"
+                app:layout_constraintTop_toBottomOf="@+id/trailers_tv" />
+
+            <TextView
+                android:id="@+id/reviews_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/large_spacing"
+                android:text="@string/reviews"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                app:layout_constraintEnd_toEndOf="@+id/trailers_rv"
+                app:layout_constraintStart_toStartOf="@+id/trailers_rv"
+                app:layout_constraintTop_toBottomOf="@+id/trailers_rv" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/reviews_rv"
+                android:layout_width="@dimen/no_spacing"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/large_spacing"
+                android:layout_marginTop="@dimen/large_spacing"
+                android:background="@color/lightGrey"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/trailers_rv"
+                app:layout_constraintStart_toStartOf="@+id/trailers_rv"
+                app:layout_constraintTop_toBottomOf="@+id/reviews_tv" />
+
+            <ImageView
+                android:id="@+id/cast_right_iv"
+                android:layout_width="@dimen/very_small_icon_size"
+                android:layout_height="@dimen/very_small_icon_size"
+                android:background="@drawable/circle_background"
+                android:contentDescription="@string/scroll_casts"
+                app:layout_constraintBottom_toTopOf="@+id/cast_list_rv"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cast_list_rv"
+                app:srcCompat="@drawable/ic_chevron_right_24dp" />
+
+            <ImageView
+                android:id="@+id/trailer_right_iv"
+                android:layout_width="@dimen/very_small_icon_size"
+                android:layout_height="@dimen/very_small_icon_size"
+                android:background="@drawable/circle_background"
+                android:contentDescription="@string/scroll_trailers"
+                app:layout_constraintBottom_toTopOf="@+id/trailers_rv"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/trailers_rv"
+                app:srcCompat="@drawable/ic_chevron_right_24dp" />
+
+            <ImageView
+                android:id="@+id/review_right_iv"
+                android:layout_width="@dimen/very_small_icon_size"
+                android:layout_height="@dimen/very_small_icon_size"
+                android:background="@drawable/circle_background"
+                android:contentDescription="@string/scroll_reviews"
+                app:layout_constraintBottom_toTopOf="@+id/reviews_rv"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/reviews_rv"
+                app:srcCompat="@drawable/ic_chevron_right_24dp" />
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
 </layout>

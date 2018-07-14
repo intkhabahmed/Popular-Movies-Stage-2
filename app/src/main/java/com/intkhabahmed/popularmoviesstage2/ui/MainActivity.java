@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.OnI
     @Override
     protected void onResume() {
         super.onResume();
-        if(Global.getSortCriteriaString().equals(AppConstants.FAVOURITE_MOVIES)) {
+        if (Global.getSortCriteriaString().equals(AppConstants.FAVOURITE_MOVIES)) {
             setupViewModel(true);
         }
     }

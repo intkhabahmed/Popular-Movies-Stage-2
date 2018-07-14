@@ -16,4 +16,5 @@
     <dimen name="thumbnail_border_padding">2dp</dimen>
     <dimen name="land_thumbnail_margin">72dp</dimen>
     <dimen name="no_spacing">0dp</dimen>
+    <dimen name="reviewer_pic_text_size">36sp</dimen>
 </resources>
