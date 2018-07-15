@@ -4,21 +4,21 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
-import com.amulyakhare.textdrawable.TextDrawable;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
@@ -35,18 +35,22 @@ import com.intkhabahmed.popularmoviesstage2.model.Review;
 import com.intkhabahmed.popularmoviesstage2.model.Trailer;
 import com.intkhabahmed.popularmoviesstage2.utils.AppConstants;
 import com.intkhabahmed.popularmoviesstage2.utils.DateUtils;
+import com.intkhabahmed.popularmoviesstage2.utils.NetworkUtils;
 import com.intkhabahmed.popularmoviesstage2.viewmodels.DetailsViewModel;
 import com.intkhabahmed.popularmoviesstage2.viewmodels.DetailsViewModelFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity implements TrailersAdapter.ItemClickListener{
 
     private ActivityDetailBinding mDetailBinding;
     private boolean isFavourite;
     private CastsAdapter mCastsAdapter;
     private TrailersAdapter mTrailersAdapter;
     private ReviewsAdapter mReviewsAdapter;
+    private String mVideoKey;
+    private String movieName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +67,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void populateUi(Movie movie) {
+        movieName = movie.getOriginalTitle();
         setTitle(movie.getOriginalTitle());
         Glide.with(this).asDrawable().apply(new RequestOptions().placeholder(R.drawable.placeholder_movieimage)
                 .error(R.drawable.error_placeholder))
@@ -74,15 +79,16 @@ public class DetailActivity extends AppCompatActivity {
         mDetailBinding.originalTitleTv.startAnimation(AnimationUtils.loadAnimation(this, R.anim.enter_from_bottom));
         mDetailBinding.plotSynopsisTv.startAnimation(AnimationUtils.loadAnimation(this, R.anim.enter_from_bottom));
         mDetailBinding.plotSynopsisTv.setText(movie.getOverview());
-        Drawable textDrawable = TextDrawable.builder()
-                .buildRound(String.valueOf(movie.getVoteAverage()), ContextCompat.getColor(this, R.color.colorPrimaryDark));
-        mDetailBinding.voteAverageIv.setImageDrawable(textDrawable);
-        mDetailBinding.voteAverageIv.startAnimation(AnimationUtils.loadAnimation(this, R.anim.enter_from_right));
+        mDetailBinding.voteAverageTv.setText(String.format("%s / 10", movie.getVoteAverage()));
+        mDetailBinding.voteAverageTv.startAnimation(AnimationUtils.loadAnimation(this, R.anim.enter_from_right));
         mDetailBinding.releaseDateTv.setText(DateUtils.getFormattedDate(movie.getReleaseDate()));
         mDetailBinding.releaseDateTv.startAnimation(AnimationUtils.loadAnimation(this, R.anim.enter_from_right));
         mCastsAdapter = new CastsAdapter(this);
-        mTrailersAdapter = new TrailersAdapter(this);
+        mTrailersAdapter = new TrailersAdapter(this, this);
         mReviewsAdapter = new ReviewsAdapter(this);
+        if (!NetworkUtils.getConnectivityStatus(this)) {
+            mDetailBinding.extraDetailsCl.setVisibility(View.GONE);
+        }
     }
 
     private void setupViewModel(final Movie movie) {
@@ -135,7 +141,7 @@ public class DetailActivity extends AppCompatActivity {
                 if (reviews != null) {
                     mReviewsAdapter.setReviews(reviews);
                 } else {
-                    mReviewsAdapter.setReviews(null);
+                    mReviewsAdapter.setReviews(new ArrayList<Review>());
                 }
             }
         });
@@ -153,6 +159,7 @@ public class DetailActivity extends AppCompatActivity {
             public void onChanged(@Nullable List<Trailer> trailers) {
                 if (trailers != null) {
                     mTrailersAdapter.setTrailers(trailers);
+                    mVideoKey = trailers.get(0).getVideoKey();
                 } else {
                     mTrailersAdapter.setTrailers(null);
                 }
@@ -190,13 +197,44 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.detail_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.share_trailer:
+                shareTrailer();
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void shareTrailer() {
+        String trailerUrl = AppConstants.YOUTUBE_URL + mVideoKey;
+        String builder = "Watch Trailer: " + movieName + "\n" + trailerUrl;
+        ShareCompat.IntentBuilder.from(this)
+                .setChooserTitle(getString(R.string.chooser_title))
+                .setType("text/plain")
+                .setText(builder).startChooser();
+    }
+
+    @Override
+    public void onClick(String videoKey) {
+        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(AppConstants.YOUTUBE_APP_URI + videoKey));
+        Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(AppConstants.YOUTUBE_URL + videoKey));
+        if (appIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(appIntent);
+        } else if (webIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(webIntent);
+        } else {
+            Toast.makeText(this, getString(R.string.video_error), Toast.LENGTH_LONG).show();
+        }
     }
 }

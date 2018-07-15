@@ -46,26 +46,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.OnI
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, spanCount);
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setHasFixedSize(true);
-        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-                outRect.bottom = 16;
-                int position = parent.getChildLayoutPosition(view);
-                if (spanCount == 2) {
-                    if (position % 2 != 0) {
-                        outRect.left = 16;
-                    }
-                } else {
-                    if (position % 2 == 0) {
-                        outRect.left = 16;
-                        outRect.right = 16;
-                    }
-                    if (position % 4 == 0) {
-                        outRect.left = 0;
-                    }
-                }
-            }
-        });
         mMoviesAdapter = new MoviesAdapter(this, this);
         recyclerView.setAdapter(mMoviesAdapter);
         mMainBinding.retryIb.setOnClickListener(new View.OnClickListener() {
@@ -77,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.OnI
     }
 
     private void setupViewModel(boolean isMovieCriteriaChanged) {
+        mMainBinding.noFavouriteTv.setVisibility(View.INVISIBLE);
         mMainBinding.noConnectionLl.setVisibility(View.INVISIBLE);
         mMainBinding.loadingPb.setVisibility(View.VISIBLE);
         final String sortCriteria = Global.getSortCriteriaString();
@@ -93,7 +74,11 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.OnI
                     mMoviesAdapter.setMovies(movieResult.getMovies());
                 } else {
                     mMoviesAdapter.setMovies(null);
-                    mMainBinding.noConnectionLl.setVisibility(View.VISIBLE);
+                    if (Global.getSortCriteriaString().equals(AppConstants.FAVOURITE_MOVIES)) {
+                        mMainBinding.noFavouriteTv.setVisibility(View.VISIBLE);
+                    } else {
+                        mMainBinding.noConnectionLl.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         });

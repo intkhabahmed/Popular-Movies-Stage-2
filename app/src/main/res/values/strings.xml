@@ -12,17 +12,21 @@
     <string name="rating">Rating</string>
     <string name="no_network_message">No Internet Connection!! Tap to retry.</string>
     <string name="retry_loading_button">Retry button to load movies</string>
-    <string name="overview">Overview</string>
+    <string name="overview">----------------&lt; Overview &gt;----------------</string>
     <string name="favourite_button">Button to mark movie as favourite</string>
     <string name="added_to_favourite">Movie added to Favourites</string>
     <string name="removed_from_favourite">Movie removed from Favourites</string>
     <string name="favourites">Favourites</string>
-    <string name="casts">Casts</string>
-    <string name="trailers">Trailers</string>
+    <string name="casts">----------------&lt; Casts &gt;----------------</string>
+    <string name="trailers">----------------&lt; Trailers &gt;----------------</string>
     <string name="trailer_description">Trailer Poster</string>
     <string name="play_button">Play button image</string>
-    <string name="reviews">Reviews</string>
+    <string name="reviews">----------------&lt; Reviews &gt;----------------</string>
     <string name="scroll_casts">Scroll to right for more casts</string>
     <string name="scroll_trailers">Scroll to right for more trailers</string>
     <string name="scroll_reviews">Scroll to right for more reviews</string>
+    <string name="no_favourites">Nothing in the favourites!!</string>
+    <string name="video_error">Cannot find any app to open the video</string>
+    <string name="share_movie">Share Movie</string>
+    <string name="chooser_title">Share Trailer with</string>
 </resources>

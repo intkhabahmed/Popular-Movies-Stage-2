@@ -19,9 +19,15 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
 
     private List<Trailer> mVideoKeys;
     private Context mContext;
+    private ItemClickListener mItemClickListener;
 
-    public TrailersAdapter(Context context) {
+    public interface ItemClickListener {
+        void onClick(String videoKey);
+    }
+
+    public TrailersAdapter(Context context, ItemClickListener itemClickListener) {
         this.mContext = context;
+        this.mItemClickListener = itemClickListener;
     }
 
     @NonNull
@@ -33,7 +39,7 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
 
     @Override
     public void onBindViewHolder(@NonNull TrailerViewHolder holder, int position) {
-        Glide.with(mContext).asBitmap().load(AppConstants.YOUTUBE_TUMBNAIL_URL +
+        Glide.with(mContext).asBitmap().load(AppConstants.YOUTUBE_THUMBNAIL_URL +
                 mVideoKeys.get(position).getVideoKey() + AppConstants.YOUTUBE_IMAGE_EXT)
                 .into(holder.trailerPoster);
     }
@@ -51,12 +57,18 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
         notifyDataSetChanged();
     }
 
-    class TrailerViewHolder extends RecyclerView.ViewHolder {
+    class TrailerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ImageView trailerPoster;
 
         TrailerViewHolder(View itemView) {
             super(itemView);
             trailerPoster = itemView.findViewById(R.id.trailer_poster_iv);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            mItemClickListener.onClick(mVideoKeys.get(getAdapterPosition()).getVideoKey());
         }
     }
 }
