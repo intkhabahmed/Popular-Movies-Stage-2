@@ -9,8 +9,8 @@ public class NetworkUtils {
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (manager != null) {
             NetworkInfo networkInfo = manager.getActiveNetworkInfo();
-            return networkInfo != null && networkInfo.isConnectedOrConnecting();
+            return networkInfo == null || !networkInfo.isConnectedOrConnecting();
         }
-        return false;
+        return true;
     }
 }

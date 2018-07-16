@@ -42,7 +42,7 @@ import com.intkhabahmed.popularmoviesstage2.viewmodels.DetailsViewModelFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DetailActivity extends AppCompatActivity implements TrailersAdapter.ItemClickListener{
+public class DetailActivity extends AppCompatActivity implements TrailersAdapter.ItemClickListener {
 
     private ActivityDetailBinding mDetailBinding;
     private boolean isFavourite;
@@ -86,7 +86,8 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
         mCastsAdapter = new CastsAdapter(this);
         mTrailersAdapter = new TrailersAdapter(this, this);
         mReviewsAdapter = new ReviewsAdapter(this);
-        if (!NetworkUtils.getConnectivityStatus(this)) {
+
+        if (NetworkUtils.getConnectivityStatus(this)) {
             mDetailBinding.extraDetailsCl.setVisibility(View.GONE);
         }
     }

@@ -6,7 +6,6 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -49,7 +48,7 @@ public class MovieRepository {
         if (criteria.equals(AppConstants.FAVOURITE_MOVIES)) {
             return getAllFavouriteMovies();
         }
-        if (!NetworkUtils.getConnectivityStatus(Global.getInstance())) {
+        if (NetworkUtils.getConnectivityStatus(Global.getInstance())) {
             return getAllMoviesFromDB(criteria);
         }
         ApiClient.getInstance().create(WebService.class)
@@ -64,7 +63,6 @@ public class MovieRepository {
                     @Override
                     public void onFailure(@NonNull Call<MovieResult> call, @NonNull Throwable t) {
                         call.cancel();
-                        Log.v(MovieRepository.class.getSimpleName(), "error: " + t.getMessage());
                     }
                 });
         return result;
@@ -83,7 +81,6 @@ public class MovieRepository {
                     @Override
                     public void onFailure(@NonNull Call<ReviewResult> call, @NonNull Throwable t) {
                         call.cancel();
-                        Log.v(MovieRepository.class.getSimpleName(), "error: " + t.getMessage());
                     }
                 });
         return reviews;
@@ -102,7 +99,6 @@ public class MovieRepository {
                     @Override
                     public void onFailure(@NonNull Call<CastResult> call, @NonNull Throwable t) {
                         call.cancel();
-                        Log.v(MovieRepository.class.getSimpleName(), "error: " + t.getMessage());
                     }
                 });
         return casts;
@@ -121,7 +117,6 @@ public class MovieRepository {
                     @Override
                     public void onFailure(@NonNull Call<TrailerResult> call, @NonNull Throwable t) {
                         call.cancel();
-                        Log.v(MovieRepository.class.getSimpleName(), "error: " + t.getMessage());
                     }
                 });
         return trailers;
